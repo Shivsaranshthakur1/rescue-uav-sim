@@ -18,6 +18,8 @@
 \usepackage{float}
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage{url}          % needed because the appendix files contain \url{...}
+\usepackage{hyperref}     % optional but fixes most link-related warnings
 
 
 
@@ -37,6 +39,10 @@
 \usepackage{xcolor}
 \usepackage{tcolorbox}
 \usepackage[table]{xcolor}
+
+% --- numeric / scientific units ---------------------------
+\usepackage{siunitx}    % <—— ADD THIS LINE
+\sisetup{detect-all}    % makes \SI use the surrounding font
 
 %--- code listings ----------------------------------------
 \usepackage{listings}
@@ -1233,20 +1239,61 @@ planning, and real-world hardware trials.
 \end{itemize}
 \end{tcolorbox}
 
-
-% ---------- APPENDICES ----------
+%------------------------------------------------------
+% APPENDIX: CODE & DATA AVAILABILITY
+%------------------------------------------------------
 \clearpage
 \appendix
-\addcontentsline{toc}{chapter}{Appendices}
+\addcontentsline{toc}{chapter}{Appendix A — Code \& Data Availability}
 
-\chapter{Repository Overview}
-\input{appendix/appendix_repo}
+\chapter*{Appendix A — Code \& Data Availability}
+\label{app:repo_overview}
 
-\chapter{Generated Figures \& Data Assets}
-\input{appendix/appendix_assets}
+All MATLAB source code, Python analysis scripts, raw CSV results and generated
+figures are openly archived on GitHub:
 
-\chapter{CI Pipeline \& Reproducibility Steps}
-\input{appendix/appendix_ci}
+\begin{center}
+\smallskip
+\href{https://github.com/your-username/rescue-uav-sim}{\texttt{https://github.com/your-username/rescue-uav-sim}}
+\smallskip
+\end{center}
+
+The repository is tagged with a release (v1.0) and a Zenodo DOI to guarantee
+long-term accessibility and precise versioning.
+
+\section*{A.1 Top-level directory map}
+
+\begin{verbatim}
+Project/
+├── classes/          % BaseUAV.m, AerialDrone.m, GroundVehicle.m, Survivor.m
+├── environment/      % createEnvironment.m
+├── pathPlanning/     % planRRT.m, checkLineCollision.m
+├── Analysis/         % CSV ⇒ PNG scripts + output plots
+├── figures/          % Static figures included in the report
+├── tests/            % Unit tests for REQ1–REQ3
+├── runExperiments.m  % 96-scenario batch runner
+├── config.m          % Central parameter file
+└── README.md         % Build & reproduction instructions
+\end{verbatim}
+
+\section*{A.2 Reproducing the results}
+
+\begin{enumerate}[leftmargin=2.2em]
+  \item \textbf{Clone} the repo and open MATLAB R2023b (or newer).
+  \item \textbf{Run} \verb|runExperiments.m| — this recreates all 96 scenarios  
+        and writes \texttt{experiment\_results.csv}.
+  \item \textbf{Execute} \verb|python Analysis/plot_results.py| (Python 3.9 +)  
+        to regenerate every figure in Chapters 5–6.
+  \item \textbf{Compile} \verb|report.tex| with \LaTeX{} (LuaLaTeX or pdf\LaTeX)  
+        to reproduce the final PDF exactly.
+\end{enumerate}
+
+\bigskip
+\noindent\textit{Licence.} All code is released under the MIT licence; figures and
+text are CC-BY 4.0 unless noted otherwise.
+
+
+
 %------------------------------------------------------
 % REFERENCES
 %------------------------------------------------------

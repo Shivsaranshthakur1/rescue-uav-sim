@@ -1,0 +1,14 @@
+\
+\section*{Appendix C — Continuous-integration pipeline}
+
+GitHub Actions workflow file: \texttt{.github/workflows/matlab.yml}
+
+\begin{enumerate}[leftmargin=1.8em]
+  \item \textbf{Setup} – Ubuntu runner, install MATLAB R2023b runner image.
+  \item \textbf{Static checks} – run \texttt{mlint -cyc -id} on every \texttt{*.m}.
+  \item \textbf{Unit tests} – execute \texttt{runtests}; smoke-tests REQ1–REQ3
+        complete in $<\!2$ s.
+  \item \textbf{Batch experiments} – call \texttt{runExperiments.m} with the small
+        $3\times2$ design (≈12 min wall-time); artefacts uploaded as ZIP.
+  \item \textbf{Coverage} – export HTML coverage report, saved as build artefact.
+\end{enumerate}

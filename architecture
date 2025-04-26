@@ -1,0 +1,39 @@
+digraph uav_rescue_arch {
+	graph [fontname=Helvetica fontsize=11 margin=0.3 nodesep=1.0 rankdir=TB ranksep="1.4 equally" splines=ortho]
+	subgraph cluster_control {
+		color="#BFBFBF" fillcolor="#FBFBFB" label="Scripts (Control Layer)" pad=0.5 style=filled
+		runRescueMission [label="runRescueMission.m" fillcolor="#F2F2F2" fontsize=10 shape=box style=filled]
+		compareApproaches [label="compareApproaches.m" fillcolor="#F2F2F2" fontsize=10 shape=box style=filled]
+		demoAllScenarios [label="demoAllScenarios.m" fillcolor="#F2F2F2" fontsize=10 shape=box style=filled]
+		cfg [label="cfg (config)" fillcolor="#D9E8FF" fontsize=10 shape=hexagon style=filled]
+	}
+	subgraph cluster_core {
+		color="#BFBFBF" fillcolor="#FBFBFB" label="Core Classes Layer" pad=0.5 style=filled
+		BaseUAV [label="«abstract»\nBaseUAV" fillcolor=white fontsize=10 shape=box style="rounded,filled"]
+		AerialDrone [label=AerialDrone fillcolor="#E4F7E8" fontsize=10 shape=box style=filled]
+		GroundVehicle [label=GroundVehicle fillcolor="#E4F7E8" fontsize=10 shape=box style=filled]
+		Survivor [label=Survivor fillcolor="#E4F7E8" fontsize=10 shape=box style=filled]
+		AerialDrone -> BaseUAV [arrowhead=empty]
+		GroundVehicle -> BaseUAV [arrowhead=empty]
+	}
+	subgraph cluster_env {
+		color="#BFBFBF" fillcolor="#FBFBFB" label="Environment & Data Layer" pad=0.5 style=filled
+		EnvironmentGenerator [label="createEnvironment.m" fillcolor="#F2F2F2" fontsize=10 shape=box style=filled]
+		EnvStruct [label="env struct\n- groundMap\n- occupancyMap3D\n- survivors[]" fillcolor="#D9E8FF" fontsize=10 shape=folder style=filled]
+		RandomSeed [label=randomSeed fillcolor="#D9E8FF" fontsize=10 shape=cylinder style=filled]
+	}
+	runRescueMission -> EnvironmentGenerator [labelangle=45 labeldistance=1.3 minlen=2 xlabel="invoke buildEnv()"]
+	EnvironmentGenerator -> EnvStruct [minlen=2 xlabel="occupancy data"]
+	EnvStruct -> AerialDrone [labelangle=45 labeldistance=1.3 style=dashed xlabel="3D map"]
+	EnvStruct -> GroundVehicle [labelangle=-45 labeldistance=1.3 style=dashed xlabel="2D map"]
+	runRescueMission -> AerialDrone [labelangle=45 labeldistance=1.3 minlen=2 xlabel=<<create>>]
+	runRescueMission -> GroundVehicle [labelangle=-45 labeldistance=1.3 minlen=2 xlabel=<<create>>]
+	runRescueMission -> AerialDrone [color="#555555" labelangle=-45 labeldistance=1.3 xlabel="moveStep / planPath"]
+	runRescueMission -> GroundVehicle [color="#555555" labelangle=45 labeldistance=1.3 xlabel="moveStep / planPath"]
+	AerialDrone -> Survivor [labelangle=45 labeldistance=1.3 xlabel=rescue]
+	GroundVehicle -> Survivor [labelangle=-45 labeldistance=1.3 xlabel=rescue]
+	compareApproaches -> runRescueMission [labelangle=-45 labeldistance=1.3 xlabel="batch run"]
+	demoAllScenarios -> runRescueMission [xlabel="varied params"]
+	cfg -> runRescueMission [style=dashed xlabel="test settings"]
+	RandomSeed -> EnvironmentGenerator [style=dashed xlabel="rng seed"]
+}

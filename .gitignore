@@ -1,0 +1,23 @@
+# — MATLAB —
+*.asv
+*.m~             # emacs / backup files
+*.mex*
+.DS_Store        # macOS Finder garbage
+
+# — LaTeX —
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.synctex.gz
+*.pdf            # built PDFs
+
+# — Python —
+__pycache__/
+*.pyc
+
+# — Experiments —
+results/
+*.csv            # if > 5 MB, move to release assets or zip
